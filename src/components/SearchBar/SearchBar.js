@@ -20,9 +20,20 @@ function SearchBar() {
       .then((data) => {
         console.log(data, "data");
         if (data.Response === "True") {
+          let movies = data.Search.map((movie) => {
+            fetch(
+              `https://api.themoviedb.org/3/find/${movie.imdbID}?api_key=72099f54bc09fe83bc5b888cfee69c02&external_source=imdb_id`
+            )
+              .then((response) => response.json())
+              .then((data) => {
+                console.log(data, "movie data from OMDB");
+                movie = { ...movie, ...data.movieResults[0] };
+                return movie;
+              });
+          });
           dispatch({
             type: ACTIONS.UPDATE_SEARCH_RESULTS,
-            payload: [...data.Search],
+            payload: [...movies],
           });
         }
       });
@@ -32,7 +43,7 @@ function SearchBar() {
     <Form onSubmit={handleSearch}>
       <InputGroup className="mb-5">
         <FormControl
-		size="lg"
+          size="lg"
           placeholder="Search a movie"
           aria-label="Search a movie"
           aria-describedby="search-button"
