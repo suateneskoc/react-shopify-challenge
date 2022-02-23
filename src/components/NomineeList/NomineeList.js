@@ -61,7 +61,7 @@ function NomineeSlide({ movies, index }) {
             <Card.Subtitle className="mb-2 text-muted">
               ({movies[index].Year})
             </Card.Subtitle>
-			<Button size="sm" variant="danger">Remove</Button>
+			<Button variant="danger">Remove</Button>
           </Card.Body>
         </>
       ) : (
