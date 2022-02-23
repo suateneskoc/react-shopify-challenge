@@ -15,7 +15,7 @@ function SearchBar() {
   }
 
   useEffect(() => {
-    fetch(`http://www.omdbapi.com/?apikey=47c5b595&type=movie&s=${term}`)
+    fetch(`https://www.omdbapi.com/?apikey=47c5b595&type=movie&s=${term}`)
       .then((response) => response.json())
       .then((data) => {
         console.log(data, "data");
