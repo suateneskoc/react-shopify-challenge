@@ -30,7 +30,7 @@ function movieReducer(state, action) {
       };
     case ACTIONS.ADD_MOVIE:
       fetch(
-        `https://api.themoviedb.org/3/find/${action.payload.imdbID}?api_key=72099f54bc09fe83bc5b888cfee69c02`
+        `https://api.themoviedb.org/3/find/${action.payload.imdbID}?api_key=72099f54bc09fe83bc5b888cfee69c02$external_source=imdb_id`
       )
         .then((response) => response.json())
         .then((data) => console.log(data, "response from TMDB"));
