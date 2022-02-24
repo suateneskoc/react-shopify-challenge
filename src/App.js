@@ -7,22 +7,21 @@ import SearchBar from "./components/SearchBar/SearchBar";
 import SearchResults from "./components/SearchResults/SearchResults";
 
 function App() {
-  const { movieStore, dispatch } = useContext(MovieStore);
-  console.log(movieStore, "store inside app");
+  //const { movieStore, dispatch } = useContext(MovieStore);
   return (
     <div className="App">
       <MovieStoreProvider>
-        <div className="bg-dark bg-graident py-5">
+        <div className="bg-dark bg-graident py-5 pb-xxl-3">
           <Container>
-            <h1 className="display-3 text-center text-white lh-base mb-5">Pick Your Nominees for <span className="nowrap">Best Movie Award</span></h1>
-			<h2 className="text-light">Nominees</h2>
-            <hr className="text-white mb-4" />
             <NomineeList />
           </Container>
         </div>
         <div className="bg-light py-5">
           <Container>
-            <h2 className="display-5 text-center mb-4">Search Movies on <span className="nowrap">Open Movie Database</span></h2>
+            <h2 className="display-5 text-center mb-4">
+              Search Movies on{" "}
+              <span className="nowrap">Open Movie Database</span>
+            </h2>
             <Row className="justify-content-center">
               <Col md={9}>
                 <SearchBar />

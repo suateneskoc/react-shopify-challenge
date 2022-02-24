@@ -1,12 +1,14 @@
-import { createContext, useReducer } from "react";
+import { createContext, useEffect, useReducer } from "react";
 
 export const ACTIONS = {
+  UPDATE_GENRES: "UPDATE_GENRES",
   UPDATE_SEARCH_RESULTS: "UPDATE_SEARCH_RESULTS",
   ADD_MOVIE: "ADD_MOVIE",
   REMOVE_MOVIE: "REMOVE_MOVIE",
 };
 
 const INITIAL_STATE = {
+  genres: [],
   nominees: [],
   searchResults: [],
 };
@@ -15,25 +17,17 @@ export const MovieStore = createContext(INITIAL_STATE);
 
 function movieReducer(state, action) {
   switch (action.type) {
+    case ACTIONS.UPDATE_GENRES:
+      return {
+        ...state,
+        genres: [...action.payload],
+      };
     case ACTIONS.UPDATE_SEARCH_RESULTS:
-      //console.log(action.payload, "results");
-      console.log(
-        {
-          ...state,
-          searchResults: [...action.payload],
-        },
-        "New state"
-      );
       return {
         ...state,
         searchResults: [...action.payload],
       };
     case ACTIONS.ADD_MOVIE:
-    //   fetch(
-    //     `https://api.themoviedb.org/3/find/${action.payload.imdbID}?api_key=72099f54bc09fe83bc5b888cfee69c02&external_source=imdb_id`
-    //   )
-    //     .then((response) => response.json())
-    //     .then((data) => console.log(data, "response from TMDB"));
       return {
         ...state,
         nominees: [...state.nominees, { ...action.payload }],
@@ -41,8 +35,8 @@ function movieReducer(state, action) {
     case ACTIONS.REMOVE_MOVIE:
       return {
         ...state,
-        nominiees: state.nominees.filter((movie) => {
-          return movie.imdbID === action.payload ? false : true;
+        nominees: state.nominees.filter((movie) => {
+          return movie.imdbID !== action.payload;
         }),
       };
     default:
@@ -52,6 +46,20 @@ function movieReducer(state, action) {
 
 function MovieStoreProvider({ children }) {
   const [store, dispatch] = useReducer(movieReducer, INITIAL_STATE);
+
+  // Get genre names paired with ids from a different API endpoint
+  useEffect(() => {
+    fetch(
+      `https://api.themoviedb.org/3/genre/movie/list?api_key=72099f54bc09fe83bc5b888cfee69c02`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        dispatch({
+          type: ACTIONS.UPDATE_GENRES,
+          payload: [...data.genres],
+        });
+      });
+  }, []);
 
   return (
     <MovieStore.Provider value={{ movieStore: store, dispatch: dispatch }}>

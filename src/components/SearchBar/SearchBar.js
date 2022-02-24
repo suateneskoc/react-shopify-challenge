@@ -3,11 +3,41 @@ import { Form, InputGroup, FormControl, Button } from "react-bootstrap";
 import { Search } from "react-bootstrap-icons";
 import { MovieStore, ACTIONS } from "../../store/MovieStore";
 
+function useTMDB(imdbID) {
+  const [data, setData] = useState("");
+
+  useEffect(() => {
+    async function fetchTMDB() {
+      return await fetch(
+        `https://api.themoviedb.org/3/find/${imdbID}?api_key=72099f54bc09fe83bc5b888cfee69c02&external_source=imdb_id`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          setData(data);
+        });
+    }
+    if (imdbID) {
+      fetchTMDB();
+    }
+  }, [imdbID]);
+
+  return data;
+}
+
 function SearchBar() {
   const { movieStore, dispatch } = useContext(MovieStore);
   const [input, setInput] = useState("");
   const [term, setTerm] = useState("");
-  //const [data, setData] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
+
+  function genreIDtoName(array) {
+    if (array) {
+      return array.map((genreID) => {
+        return movieStore.genres.find((genre) => genre.id === genreID).name;
+      });
+    }
+    return [];
+  }
 
   function handleSearch(e) {
     e.preventDefault();
@@ -15,29 +45,58 @@ function SearchBar() {
   }
 
   useEffect(() => {
-    fetch(`https://www.omdbapi.com/?apikey=47c5b595&type=movie&s=${term}`)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data, "data");
-        if (data.Response === "True") {
-          let movies = data.Search.map((movie) => {
-            fetch(
+    const fetchOMDB = async () => {
+      return await fetch(
+        `https://www.omdbapi.com/?apikey=47c5b595&type=movie&s=${term}`
+      )
+        .then((response) => response.json())
+        .then((data) => setSearchResults([...data.Search]));
+    };
+    if (term) {
+      fetchOMDB();
+    }
+  }, [term]);
+
+  useEffect(() => {
+    const fetchTMDB = async () => {
+      if (searchResults.length) {
+        let tmdb = await Promise.all(
+          searchResults.map(async (movie) => {
+            return await fetch(
               `https://api.themoviedb.org/3/find/${movie.imdbID}?api_key=72099f54bc09fe83bc5b888cfee69c02&external_source=imdb_id`
             )
               .then((response) => response.json())
               .then((data) => {
-                console.log(data, "movie data from OMDB");
-                movie = { ...movie, ...data.movieResults[0] };
-                return movie;
+                if (data.movie_results.length) {
+                  return data.movie_results[0];
+                }
               });
+          })
+        );
+        tmdb = tmdb.filter((movie) => {
+          return movie ? true : false;
+        });
+        const mergeByTitle = (array1, array2) => {
+          return array1.map((movie) => {
+            const match = array2.find(
+              (item) => movie.Title === item.original_title
+            );
+            return {
+              ...match,
+              ...movie,
+              genres:
+                match && match.genre_ids ? genreIDtoName(match.genre_ids) : [],
+            };
           });
-          dispatch({
-            type: ACTIONS.UPDATE_SEARCH_RESULTS,
-            payload: [...movies],
-          });
-        }
-      });
-  }, [term]);
+        };
+        dispatch({
+          type: ACTIONS.UPDATE_SEARCH_RESULTS,
+          payload: mergeByTitle(searchResults, tmdb),
+        });
+      }
+    };
+    fetchTMDB();
+  }, [searchResults]);
 
   return (
     <Form onSubmit={handleSearch}>
