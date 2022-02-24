@@ -3,27 +3,6 @@ import { Form, InputGroup, FormControl, Button } from "react-bootstrap";
 import { Search } from "react-bootstrap-icons";
 import { MovieStore, ACTIONS } from "../../store/MovieStore";
 
-function useTMDB(imdbID) {
-  const [data, setData] = useState("");
-
-  useEffect(() => {
-    async function fetchTMDB() {
-      return await fetch(
-        `https://api.themoviedb.org/3/find/${imdbID}?api_key=72099f54bc09fe83bc5b888cfee69c02&external_source=imdb_id`
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          setData(data);
-        });
-    }
-    if (imdbID) {
-      fetchTMDB();
-    }
-  }, [imdbID]);
-
-  return data;
-}
-
 function SearchBar() {
   const { movieStore, dispatch } = useContext(MovieStore);
   const [input, setInput] = useState("");
@@ -37,11 +16,6 @@ function SearchBar() {
       });
     }
     return [];
-  }
-
-  function handleSearch(e) {
-    e.preventDefault();
-    setTerm(input);
   }
 
   useEffect(() => {
@@ -99,12 +73,17 @@ function SearchBar() {
   }, [searchResults]);
 
   return (
-    <Form onSubmit={handleSearch}>
+    <Form
+      onSubmit={(e) => {
+        e.preventDefault();
+        setTerm(input);
+      }}
+    >
       <InputGroup className="mb-5">
         <FormControl
           size="lg"
-          placeholder="Search a movie"
-          aria-label="Search a movie"
+          placeholder="Search movies"
+          aria-label="Search movies"
           aria-describedby="search-button"
           onChange={(e) => setInput(e.target.value)}
         />

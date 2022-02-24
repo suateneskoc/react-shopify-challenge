@@ -11,19 +11,19 @@ function App() {
   return (
     <div className="App">
       <MovieStoreProvider>
-        <div className="bg-dark bg-graident py-5 pb-xxl-3">
+        <div className="bg-dark bg-graident py-5">
           <Container>
             <NomineeList />
           </Container>
         </div>
         <div className="bg-light py-5">
           <Container>
-            <h2 className="display-5 text-center mb-4">
-              Search Movies on{" "}
-              <span className="nowrap">Open Movie Database</span>
-            </h2>
             <Row className="justify-content-center">
-              <Col md={9}>
+              <Col sm={9} md={8} lg={6} xxl={5}>
+                <h2 className="display-5 text-center mb-4">
+                  Search Movies on{" "}
+                  <span className="nowrap">Open Movie Database</span>
+                </h2>
                 <SearchBar />
               </Col>
             </Row>

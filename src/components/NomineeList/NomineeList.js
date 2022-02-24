@@ -13,13 +13,6 @@ import "./NomineeList.css";
 function NomineeSlide({ movies, index }) {
   const { movieStore, dispatch } = useContext(MovieStore);
 
-  function handleRemove(imdbID) {
-    dispatch({
-      type: ACTIONS.REMOVE_MOVIE,
-      payload: imdbID,
-    });
-  }
-
   return (
     <Card className="mb-5">
       {index < movies.length ? (
@@ -58,7 +51,12 @@ function NomineeSlide({ movies, index }) {
                 <Button
                   variant="link"
                   className="link-danger p-0 b-0"
-                  onClick={() => handleRemove(movies[index].imdbID)}
+                  onClick={() =>
+                    dispatch({
+                      type: ACTIONS.REMOVE_MOVIE,
+                      payload: movies[index].imdbID,
+                    })
+                  }
                 >
                   Remove
                 </Button>
@@ -69,8 +67,11 @@ function NomineeSlide({ movies, index }) {
       ) : (
         <>
           <div className="aspect-ratio-2by3 bg-secondary bg-opacity-10">
-            <div className="aspect-ratio-inside d-flex justify-content-center align-items-center">
+            <div className="aspect-ratio-inside d-flex flex-column justify-content-center align-items-center">
               <div className="display-1 text-muted">{index + 1}</div>
+              <div className="small text-muted">
+                Search movies and add to your list
+              </div>
             </div>
           </div>
           <Card.Body>
@@ -97,21 +98,26 @@ function NomineeSlide({ movies, index }) {
 }
 
 function NomineeList() {
-  const { movieStore, dispatch } = useContext(MovieStore);
+  const { movieStore } = useContext(MovieStore);
 
   return (
     <>
-      <h1 className="display-3 text-center text-white lh-base mb-5">
-        Pick Your Nominees for <span className="nowrap">Best Movie Award</span>
-      </h1>
+      <Row className="justify-content-center">
+        <Col xl={9}>
+          <h1 className="display-3 text-center text-white lh-base mb-5">
+            Pick Your Nominees for{" "}
+            <span className="nowrap">Best Movie Award</span>
+          </h1>
+        </Col>
+      </Row>
       <Row className="justify-content-between align-items-end text-light">
         <Col>
           <h2 className="mb-0">Your Nominees</h2>
         </Col>
         <Col xs="auto">
-          <p className="fs-5 font-monospace lh-sm mb-0">
+          <div className="fs-5 font-monospace lh-sm">
             {movieStore.nominees.length}/5
-          </p>
+          </div>
         </Col>
       </Row>
       <hr className="text-white mb-4" />
@@ -145,6 +151,15 @@ function NomineeList() {
           <NomineeSlide movies={movieStore.nominees} index={4} />
         </SwiperSlide>
       </Swiper>
+
+      {movieStore.nominees.length === 5 ? (
+        <div className="d-flex flex-column align-items-center text-light pt-3">
+          <div className="display-5">Well done!</div>
+          <p>Share your list on socila media.</p>
+          <Button variant="primary">Share</Button>
+        </div>
+      ) : null}
+      <div></div>
     </>
   );
 }

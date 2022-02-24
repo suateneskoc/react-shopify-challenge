@@ -45,7 +45,14 @@ function movieReducer(state, action) {
 }
 
 function MovieStoreProvider({ children }) {
-  const [store, dispatch] = useReducer(movieReducer, INITIAL_STATE);
+  const [store, dispatch] = useReducer(movieReducer, INITIAL_STATE, () => {
+    const localData = localStorage.getItem("movies");
+    return localData ? JSON.parse(localData) : INITIAL_STATE;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("movies", JSON.stringify(store));
+  }, [store]);
 
   // Get genre names paired with ids from a different API endpoint
   useEffect(() => {

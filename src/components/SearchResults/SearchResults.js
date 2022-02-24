@@ -58,6 +58,10 @@ function SearchResults() {
                         <Button variant="secondary" size="sm" disabled>
                           Nominated
                         </Button>
+                      ) : movieStore.nominees.length === 5 ? (
+                        <Button variant="secondary" size="sm" disabled>
+                          Out of slots
+                        </Button>
                       ) : (
                         <Button
                           variant="primary"
