@@ -124,8 +124,8 @@ function SearchBar() {
         </Col>
       </Row>
       {movieNotFound ? (
-        <Row>
-          <Col>
+        <Row className="justify-content-center"> 
+          <Col lg={9} xl={8} xxl={6}>
             <Alert variant="danger">
               <Alert.Heading>
                 <ExclamationCircleFill className="mb-1"/> Movie Not Found
