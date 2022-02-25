@@ -1,5 +1,12 @@
 import { useContext, useEffect, useState } from "react";
-import { Form, InputGroup, FormControl, Button } from "react-bootstrap";
+import {
+  Row,
+  Col,
+  Form,
+  InputGroup,
+  FormControl,
+  Button,
+} from "react-bootstrap";
 import { Search } from "react-bootstrap-icons";
 import { MovieStore, ACTIONS } from "../../store/MovieStore";
 
@@ -73,25 +80,32 @@ function SearchBar() {
   }, [searchResults]);
 
   return (
-    <Form
-      onSubmit={(e) => {
-        e.preventDefault();
-        setTerm(input);
-      }}
-    >
-      <InputGroup className="mb-5">
-        <FormControl
-          size="lg"
-          placeholder="Search movies"
-          aria-label="Search movies"
-          aria-describedby="search-button"
-          onChange={(e) => setInput(e.target.value)}
-        />
-        <Button type="submit" variant="primary" id="search-button">
-          <Search />
-        </Button>
-      </InputGroup>
-    </Form>
+    <Row className="justify-content-center">
+      <Col xs={10} sm={9} md={8} lg={6} xxl={5}>
+        <h2 className="display-5 text-center mb-4">
+          Search Movies on <span className="nowrap">Open Movie Database</span>
+        </h2>
+        <Form
+          onSubmit={(e) => {
+            e.preventDefault();
+            setTerm(input);
+          }}
+        >
+          <InputGroup className="mb-5">
+            <FormControl
+              size="lg"
+              placeholder="Search movies"
+              aria-label="Search movies"
+              aria-describedby="search-button"
+              onChange={(e) => setInput(e.target.value)}
+            />
+            <Button type="submit" variant="primary" id="search-button">
+              <Search />
+            </Button>
+          </InputGroup>
+        </Form>
+      </Col>
+    </Row>
   );
 }
 

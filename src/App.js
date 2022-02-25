@@ -18,15 +18,7 @@ function App() {
         </div>
         <div className="bg-light py-5">
           <Container>
-            <Row className="justify-content-center">
-              <Col sm={9} md={8} lg={6} xxl={5}>
-                <h2 className="display-5 text-center mb-4">
-                  Search Movies on{" "}
-                  <span className="nowrap">Open Movie Database</span>
-                </h2>
-                <SearchBar />
-              </Col>
-            </Row>
+            <SearchBar />
             <SearchResults />
           </Container>
         </div>
